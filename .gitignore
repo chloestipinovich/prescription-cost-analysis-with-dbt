@@ -29,4 +29,5 @@ Thumbs.db
 
 # Optional: Ignore sensitive or large local datasets
 seeds/*.csv
+*.csv
 !seeds/pca_2024_25.csv  # Keep just this one if you want to version it
