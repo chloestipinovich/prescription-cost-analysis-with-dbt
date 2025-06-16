@@ -1,0 +1,113 @@
+version: 2
+
+models:
+  - name: stg_prescription_costs_24_25
+    description: "Staging model for 2024/2025 prescription cost data."
+    columns:
+      - name: YEAR_DESC
+        tests:
+          - not_null
+
+      - name: REGION_NAME
+        tests:
+          - not_null
+
+      - name: REGION_CODE
+        tests:
+          - not_null
+
+      - name: ICB_NAME
+        tests:
+          - not_null
+
+      - name: ICB_CODE
+        tests:
+          - not_null
+
+      - name: BNF_PRESENTATION_CODE
+        tests:
+          - not_null
+
+      - name: BNF_PRESENTATION_NAME
+        tests:
+          - not_null
+
+      - name: UNIT_OF_MEASURE
+        tests:
+          - not_null
+
+      - name: GENERIC_BNF_EQUIVALENT_CODE
+        tests:
+          - not_null
+
+      - name: GENERIC_BNF_EQUIVALENT_NAME
+        tests:
+          - not_null
+
+      - name: BNF_CHEMICAL_SUBSTANCE_CODE
+        tests:
+          - not_null
+
+      - name: BNF_CHEMICAL_SUBSTANCE
+        tests:
+          - not_null
+
+      - name: BNF_PARAGRAPH_CODE
+        tests:
+          - not_null
+
+      - name: BNF_PARAGRAPH
+        tests:
+          - not_null
+
+      - name: BNF_SECTION_CODE
+        tests:
+          - not_null
+
+      - name: BNF_SECTION
+        tests:
+          - not_null
+
+      - name: BNF_CHAPTER_CODE
+        tests:
+          - not_null
+
+      - name: BNF_CHAPTER
+        tests:
+          - not_null
+
+      - name: PREP_CLASS
+        tests:
+          - not_null
+
+      - name: PRESCRIBED_PREP_CLASS
+        tests:
+          - not_null
+
+      - name: ITEMS
+        tests:
+          - not_null
+
+      - name: TOTAL_QUANTITY
+        tests:
+          - not_null
+
+      - name: NIC
+        tests:
+          - not_null
+
+      - name: NIC_PER_ITEM
+        tests:
+          - not_null
+
+      - name: NIC_PER_QUANTITY
+        tests:
+          - not_null
+
+      - name: QUANTITY_PER_ITEM
+        tests:
+          - not_null
+
+      - name: PHARMACY_ADVANCED_SERVICE
+        tests:
+          - not_null

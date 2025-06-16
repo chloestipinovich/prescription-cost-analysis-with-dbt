@@ -1,0 +1,71 @@
+
+# Name your project! Project names should contain only lowercase characters
+# and underscores. A good package name should reflect your organization's
+# name or the intended use of these models
+name: 'pca_with_dbt'
+version: '1.0.0'
+
+# This setting configures which "profile" dbt uses for this project.
+profile: 'pca_with_dbt'
+
+# These configurations specify where dbt should look for different types of files.
+# The `model-paths` config, for example, states that models in this project can be
+# found in the "models/" directory. You probably won't need to change these!
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:         # directories to be removed by `dbt clean`
+  - "target"
+  - "dbt_packages"
+
+
+# Configuring models
+# Full documentation: https://docs.getdbt.com/docs/configuring-models
+
+# In this example config, we tell dbt to build all models in the example/
+# directory as views. These settings can be overridden in the individual model
+# files using the `{{ config(...) }}` macro.
+models:
+  pca_with_dbt:
+    # Config indicated by + and applies to all files under models/example/
+    example:
+      +materialized: view
+
+seeds:
+  pca_with_dbt:
+    +quote_columns: true
+    +column_types:
+      YEAR_DESC: string
+      REGION_NAME: string
+      REGION_CODE: string
+      ICB_NAME: string
+      ICB_CODE: string
+      BNF_PRESENTATION_CODE: string
+      BNF_PRESENTATION_NAME: string
+      SNOMED_CODE: string
+      SUPPLIER_NAME: string
+      UNIT_OF_MEASURE: string
+      GENERIC_BNF_EQUIVALENT_CODE: string
+      GENERIC_BNF_EQUIVALENT_NAME: string
+      BNF_CHEMICAL_SUBSTANCE_CODE: string
+      BNF_CHEMICAL_SUBSTANCE: string
+      BNF_PARAGRAPH_CODE: string
+      BNF_PARAGRAPH: string
+      BNF_SECTION_CODE: string
+      BNF_SECTION: string
+      BNF_CHAPTER_CODE: string
+      BNF_CHAPTER: string
+      PREP_CLASS: string
+      PRESCRIBED_PREP_CLASS: string
+      ITEMS: string
+      TOTAL_QUANTITY: string
+      NIC: string
+      NIC_PER_ITEM: string
+      NIC_PER_QUANTITY: string
+      QUANTITY_PER_ITEM: string
+      PHARMACY_ADVANCED_SERVICE: string
+
