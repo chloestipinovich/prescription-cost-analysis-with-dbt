@@ -1,0 +1,32 @@
+# Ignore DBT artifacts and logs
+dbt_modules/
+dbt_packages/
+logs/
+target/
+dbt.log
+manifest.json
+run_results.json
+catalog.json
+
+# Ignore DuckDB database file (unless you want to commit it)
+*.duckdb
+*.duckdb-wal
+
+# Ignore virtual environments
+pca-dbt-env
+.venv/
+env/
+venv/
+__pycache__/
+*.py[cod]
+
+# Ignore Jupyter Notebook checkpoint files
+.ipynb_checkpoints/
+
+# Ignore OS metadata
+.DS_Store
+Thumbs.db
+
+# Optional: Ignore sensitive or large local datasets
+seeds/*.csv
+!seeds/pca_2024_25.csv  # Keep just this one if you want to version it
