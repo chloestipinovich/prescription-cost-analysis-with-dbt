@@ -2,10 +2,10 @@
 
 WITH icb_nic AS (
     SELECT
-        ICB_NAME,
+        REGION_NAME, ICB_NAME,
         SUM(total_nic) AS nic_by_icb
     FROM {{ ref('icb_nic_summary') }}
-    GROUP BY ICB_NAME
+    GROUP BY REGION_NAME, ICB_NAME
 ),
 
 icb_with_percentage AS (
