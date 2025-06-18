@@ -14,8 +14,18 @@ The primary goal of this project was to gain **hands-on experience with dbt**. T
 - Building data marts
 - Generating documentation and tests
 - Deploying a polished frontend using Streamlit
+- Leveraging DuckDB as a fast, embedded data warehouse
 
 This project showcases my ability to work across the modern data stack.
+
+---
+
+## 🧱 Architecture Overview
+
+- **dbt** for transformation, modular SQL, testing, documentation
+- **DuckDB** as the local analytical data warehouse
+- **Streamlit** for the interactive data dashboard
+- **Pandas, Plotly & Matplotlib** for data manipulation and visualizations in Python
 
 ---
 
