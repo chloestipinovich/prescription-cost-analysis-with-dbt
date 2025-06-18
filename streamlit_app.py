@@ -3,6 +3,8 @@ import duckdb
 import pandas as pd
 import streamlit as st
 from matplotlib import cm
+import os
+import gdown
 
 from pyecharts import options as opts
 from pyecharts.charts import Pie
@@ -31,10 +33,25 @@ region_colors = {
     "SOUTH WEST": "#66c2a5"
 }
 
+# Define how to download the duckdb file from Google Drive
+@st.cache_data
+def download_duckdb_file():
+    file_id = "1EgaaW_nKExsz0iKeuKh6kd5laFsEcb4_"
+    url = f"https://drive.google.com/uc?id={file_id}"
+    local_filename = "pca_with_dbt.duckdb"
+    
+    if not os.path.exists(local_filename):
+        gdown.download(url, local_filename, quiet=False)
+    
+    return local_filename
+
+# Download the DuckDB from Google Drive
+db_file = download_duckdb_file()
+
 # --- Cache and load data ---
 @st.cache_data
 def get_data():
-    with duckdb.connect("pca_with_dbt.duckdb") as conn:
+    with duckdb.connect(db_file) as conn:
         nic_by_region = conn.execute("SELECT * FROM nic_by_icb_regions").fetchdf()
         nic_by_icb = conn.execute("SELECT * FROM nic_by_icb").fetchdf()
         nic_by_bnf_chapter = conn.execute("SELECT * FROM nic_by_bnf_chapter").fetchdf()
