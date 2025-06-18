@@ -46,18 +46,22 @@ git clone https://github.com/chloestipinovich/prescription-cost-analysis-with-db
 cd prescription-cost-analysis-with-dbt
 ```
 
-### 2. Set Up the Virtual Environment and Install Dependencies
+### 2.1 Set Up the Virtual Environment (Optional)
 
 ```bash
 # Create a virtual environment
-python -m venv venv
+uv venv venv
 
 # Activate the virtual environment
 # On Windows:
-venv\Scripts\activate
+. venv\Scripts\activate
 # On macOS/Linux:
 source venv/bin/activate
+```
 
+### 2.2 Install Dependencies
+
+```bash
 # Install dependencies using pip
 pip install -r requirements.txt
 
@@ -67,7 +71,7 @@ uv pip install -r requirements.txt --link-mode=copy
 ```
 
 ### 3. Download the Original Data
-Download the original prescription data from this link and place it in a new data directory:
+Download the original prescription data from [this link](https://opendata.nhsbsa.net/dataset/prescription-cost-analysis-pca-annual-statistics/resource/b8cf68a5-4a93-4940-a5c1-4064bc947ffb) and place it in a new `data` directory:
 
 ```bash
 # Create the data directory
@@ -75,17 +79,18 @@ mkdir data
 
 # Move your downloaded file to the data folder and rename it
 # (Update path if necessary)
-mv ~/Downloads/prescriptions.csv ./data/data.csv
+mv ~/Downloads/pca_icb_snomed_2024_2025.csv ./data/data.csv
 ```
 
 ### 4. Run the DBT Models
-Run the transformation pipeline using dbt:
+Run the transformation pipeline using `dbt`:
+
 
 📘 Make sure your DBT profile is configured correctly in ~/.dbt/profiles.yml.
 
 ### 5. View the Database
-Use a SQL client like DBeaver to inspect the transformed data:
+Use a SQL client like `DBeaver` to inspect the transformed data:
 
-Connect to your local database (e.g., SQLite, Postgres, etc.)
+- Connect to your local database (e.g., SQLite, Postgres, etc.)
 
-Explore schemas such as staging and marts
+- Explore schemas such as staging and marts
