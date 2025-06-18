@@ -39,4 +39,4 @@ Key points:
 
 ```bash
 git clone https://github.com/chloestipinovich/prescription-cost-analysis-with-dbt.git
-cd your-repo-name
+cd prescription-cost-analysis-with-dbt
