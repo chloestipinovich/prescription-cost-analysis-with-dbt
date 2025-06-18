@@ -133,3 +133,9 @@ Use a SQL client like `DBeaver` to inspect the transformed data:
 - Connect to your local database (e.g., SQLite, Postgres, etc.)
 
 - Explore schemas such as staging and marts
+
+### 🏃‍♀️ 6. Streamlit App Execusion
+If you are interested in running the Streamlit app, you are now able to do this locally with:
+```bash
+streamlit run streamlit_app.py
+```
