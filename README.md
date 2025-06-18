@@ -70,6 +70,12 @@ pip install -r requirements.txt
 uv pip install -r requirements.txt --link-mode=copy
 ```
 
+### 🗄️ 2.3 Define required local variables
+Create a file called `.env` in the root of the project and paste the below:
+```bash
+DATA_SOURCE=local
+```
+
 ### ⬇️ 3. Download the Original Data
 Download the original prescription cost data from [this link](https://opendata.nhsbsa.net/dataset/prescription-cost-analysis-pca-annual-statistics/resource/b8cf68a5-4a93-4940-a5c1-4064bc947ffb) and place it in a new `data` directory:
 
