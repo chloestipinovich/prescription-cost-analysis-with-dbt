@@ -1,3 +1,4 @@
+# Import required packages
 import plotly.graph_objects as go
 import duckdb
 import pandas as pd
@@ -13,6 +14,7 @@ from streamlit_echarts import st_pyecharts
 # Set up the page
 st.set_page_config(page_title="NIC Dashboard", layout="wide")
 
+# Define button specs
 st.markdown("""
     <style>
     div.stButton > button:first-child {
@@ -22,7 +24,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Color mapping
+# Define colour mapping for regions
 region_colors = {
     "MIDLANDS": "#dd4345",
     "NORTH EAST AND YORKSHIRE": "#377eb8",
@@ -48,7 +50,7 @@ def download_duckdb_file():
 # Download the DuckDB from Google Drive
 db_file = download_duckdb_file()
 
-# --- Cache and load data ---
+# Cache and load data
 @st.cache_data
 def get_data():
     with duckdb.connect(db_file) as conn:
@@ -61,11 +63,11 @@ def get_data():
 
 nic_by_region, nic_by_icb, nic_by_bnf_chapter, nic_by_bnf_section, nic_by_bnf_paragraph = get_data()
 
-# --- Navigation State ---
+# Navigation State 
 if "page" not in st.session_state:
     st.session_state.page = "Introduction"
 
-# --- Sidebar Navigation Buttons ---
+# Sidebar Navigation Buttons
 with st.sidebar:
     st.title("Navigation")
     if st.button("Introduction", use_container_width=True):
@@ -75,12 +77,12 @@ with st.sidebar:
     if st.button("By Region", use_container_width=True):
         st.session_state.page = "Regions"
 
-# --- Page Content ---
+# Page Content
 
-# --- INTRODUCTION ---
+#  INTRODUCTION PAGE -------------------------------------------------
 if st.session_state.page == "Introduction":
     st.title("NHS Prescription Cost Analysis Dashboard")
-    st.header("2024/2025 Financial Year")
+    st.markdown("<h2 style='color: #777777;'>2024/2025 Financial Year</h2>", unsafe_allow_html=True)
     st.write("")
     st.write("")
     st.subheader("🚀 Project Goal")
@@ -113,6 +115,8 @@ if st.session_state.page == "Introduction":
     <a href="https://opendata.nhsbsa.net/dataset/prescription-cost-analysis-pca-annual-statistics/resource/b8cf68a5-4a93-4940-a5c1-4064bc947ffb" target="_blank">Go directly to the PCA Annual Statistics Dataset</a>
     </p>
     """, unsafe_allow_html=True)
+    st.write("NHS Business Services Authority. Prescription Cost Analysis England 2024/25. Available at: https://www.nhsbsa.nhs.uk/statistical-collections/prescription-cost-analysis-england (Accessed: June 2025).")
+
 
     st.subheader("🗂️ Glossary")
     glossary_html = """
@@ -146,12 +150,7 @@ if st.session_state.page == "Introduction":
 
     st.markdown(glossary_html, unsafe_allow_html=True)
 
-    st.write("NHS Business Services Authority. Prescription Cost Analysis England 2024/25. Available at: https://www.nhsbsa.nhs.uk/statistical-collections/prescription-cost-analysis-england (Accessed: June 2025).")
-
-
-
-
-# --- REGIONS ---
+# REGIONS  PAGE -------------------------------------------------
 elif st.session_state.page == "Regions":
     # st.title("Net Ingredient Cost by Region and Integrated Care Board")
     st.markdown("<h1>Net Ingredient Cost by<br>Region and Integrated Care Board</h1>", unsafe_allow_html=True)
@@ -259,7 +258,7 @@ elif st.session_state.page == "Regions":
         st.markdown(styled_df.to_html(), unsafe_allow_html=True)
 
 
-# Add this to your script (outside the function ideally)
+# Define Section Descriptions
 section_descriptions = {
     "Endocrine System": "Hormones, anti‑diabetics, thyroid agents",
     "Central Nervous System": "Analgesics, antidepressants, antipsychotics, anticonvulsants",
@@ -284,7 +283,7 @@ section_descriptions = {
     "Preparations Used in Diagnosis": "Contrast media, diagnostic dyes, barium preparations"
 }
 
-
+# BNF PAGE -------------------------------------------------
 if st.session_state.page == "BNF":
     st.markdown("<h1>Net Ingredient Cost by<br>British National Formulary Classification</h1>", unsafe_allow_html=True)
 
@@ -350,19 +349,18 @@ if st.session_state.page == "BNF":
         df = df[[bnf_col, "% of Total NIC", "NIC (£)"]]
         df = df.sort_values("% of Total NIC", ascending=False)
 
-        # Create styled HTML table
-        table_html = df.to_html(
-            index=False,
-            escape=False,
-            justify="center",
-            classes="nic-table"
-        )
+        # Wrap the table in a scrollable container div
+        table_html = f"""
+        <div class="scrollable-table">
+            {df.to_html(index=False, escape=False, justify="center", classes="nic-table")}
+        </div>
+        """
 
         # Inject custom CSS to style the table
         st.markdown("""
             <style>
             .nic-table {
-                width: 70% !important;
+                width: 100% !important;
                 margin-left: auto;
                 margin-right: auto;
                 border-collapse: collapse;
@@ -386,12 +384,53 @@ if st.session_state.page == "BNF":
             .info-tooltip:hover {
                 text-decoration: underline dotted;
             }
+            .scrollable-table {
+                max-height: 500px;
+                overflow-y: auto;
+                overflow-x: hidden;
+                border: 1px solid #ccc; 
+            }
+
+            /* Make table headers sticky */
+            .nic-table thead th {
+                position: sticky;
+                top: 0;
+                background-color: #f0f2f6; /* Same as your header background */
+                z-index: 1; /* Ensure headers stay on top */
+            }
             </style>
         """, unsafe_allow_html=True)
 
 
         # Display styled table
         st.markdown(table_html, unsafe_allow_html=True)
+
+        st.write("")
+
+        col7, col8 = st.columns([3, 1.7])
+        with col7:
+            # Information panel about tool tip hovering
+            st.markdown("""
+                <style>
+                .info-icon {
+                    font-size: 1.1em;
+                    margin-right: 6px;
+                    vertical-align: middle;
+                }
+                </style>
+
+                <div style="
+                    background-color: #f0f0f0;
+                    padding: 15px;
+                    border-radius: 5px;
+                    font-size: 20px;
+                    font-style: italic;
+                    color: #333333;
+                    margin-bottom: 20px;
+                ">
+                    <b>Note:</b> Hover over the ℹ️ icons in the table above for examples of what to see in each chapter.
+                </div>
+            """, unsafe_allow_html=True)
     
     def format_and_display_interactive(df, level_name):
         df = df.copy()
@@ -413,13 +452,12 @@ if st.session_state.page == "BNF":
         if level_name == 'paragraph':
             df = df.drop(columns=["nic_by_paragraph"], errors='ignore')
 
-        # Convert to HTML with nic-table class, no index, centered justification
-        table_html = df.to_html(
-            index=False,
-            escape=False,
-            justify="center",
-            classes="nic-table"
-        )
+        # Wrap the table in a scrollable container div
+        table_html = f"""
+        <div class="scrollable-table">
+            {df.to_html(index=False, escape=False, justify="center", classes="nic-table")}
+        </div>
+        """
 
         # Number of columns, to target last two
         n_cols = len(df.columns)
@@ -448,13 +486,27 @@ if st.session_state.page == "BNF":
             .nic-table th:nth-child({n_cols - 1}), .nic-table th:nth-child({n_cols}) {{
                 text-align: center;
             }}
+            .scrollable-table {{
+                max-height: 500px;
+                overflow-y: auto;
+                overflow-x: hidden;
+                border: 1px solid #ccc; 
+            }}
+
+            /* Make table headers sticky */
+            .nic-table thead th {{
+                position: sticky;
+                top: 0;
+                background-color: #f0f2f6; /* Same as your header background */
+                z-index: 1; /* Ensure headers stay on top */
+            }}
             </style>
         """, unsafe_allow_html=True)
 
         st.markdown(table_html, unsafe_allow_html=True)
 
 
-# CHAPTER ----------------------------
+# CHAPTER
     if show_chapter or not any([show_section, show_paragraph]):
         # 
         st.subheader("🫀 NIC Costs by BNF Chapter")
@@ -468,11 +520,11 @@ if st.session_state.page == "BNF":
         st.markdown("""
             <i><span style='font-size:18px'>
             A BNF Chapter is the broadest classification grouping related therapeutic areas or body systems.<br>
-            For example, the <b>Endocrine System</b> is a chapter.
+            For example, the <b>Endocrine System</b> is a BNF chapter.
             </span></i>
             """, unsafe_allow_html=True)
 
-        # --- PIE CHART ---
+        # PIE CHART
         chapter_data = (
             nic_by_bnf_chapter.sort_values("percentage_of_total_nic", ascending=False)
             [["bnf_chapter", "percentage_of_total_nic"]]
@@ -500,7 +552,7 @@ if st.session_state.page == "BNF":
         st.write("")
         format_and_display_chapter(nic_by_bnf_chapter, "chapter")
 
-# SECTION ----------------------------
+# SECTION
     elif show_section:
         # 
         st.subheader("🩺 NIC Costs by BNF Section")
@@ -512,14 +564,14 @@ if st.session_state.page == "BNF":
         st.markdown("""
         <i><span style='font-size:18px'>
         A BNF section is a subdivision within a chapter that categorizes medicines by more specific clinical indications or drug classes.<br>
-        For example, the <b>Endocrine System</b> chapter has a section called <b>Drugs Used in Diabetes</b>.
+        For example, the <b>Endocrine System</b> chapter has a BNF section called <b>Drugs Used in Diabetes</b>.
         </span></i>
         """, unsafe_allow_html=True)
 
         st.write("")
         format_and_display_interactive(nic_by_bnf_section, "section")
 
-# PARAGRAPH ----------------------------
+# PARAGRAPH
     elif show_paragraph:
         st.subheader("💊 NIC Costs by BNF Paragraph")
         st.markdown("""
@@ -530,7 +582,7 @@ if st.session_state.page == "BNF":
         st.markdown("""
         <i><span style='font-size:18px'>
         A BNF Paragraph is the most detailed level, specifying individual drugs or closely related groups within a section.<br>
-        For example, <b>Antidiabetic Drugs</b> is a paragaph in the <b>Drugs Used in Diabetes</b> section of the <b>Endocrine System</b>chapter.
+        For example, <b>Antidiabetic Drugs</b> is a BNF paragaph in the <b>Drugs Used in Diabetes</b> section of the <b>Endocrine System</b>chapter.
         </span></i>
         """, unsafe_allow_html=True)
         st.markdown("<i><span style='font-size:18px'></span></i>", unsafe_allow_html=True)
