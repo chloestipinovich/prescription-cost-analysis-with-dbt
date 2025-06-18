@@ -35,7 +35,7 @@ Key points:
 - Granular breakdown by **BNF Chapter**, **Section**, and **Paragraph**
 - Used to visualize cost distribution and prescribing patterns
 
-📁 [Go directly to the PCA dataset](https://opendata.nhsbsa.net/dataset/prescription-cost-analysis-pca-annual-statistics/resource/b8cf68a5-4a93-4940-a5c1-4064bc947ffb)
+NHS Business Services Authority. Prescription Cost Analysis England 2024/25. Available at: https://www.nhsbsa.nhs.uk/statistical-collections/prescription-cost-analysis-england (Accessed: June 2025).
 
 ## 🛠️ How to Reproduce the Data Warehouse Locally
 
