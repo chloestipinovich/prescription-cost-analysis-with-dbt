@@ -18,16 +18,12 @@ The primary goal of this project was to gain **hands-on experience with dbt**. T
 
 This project showcases my ability to work across the modern data stack.
 
----
-
 ## 🧱 Architecture Overview
 
 - **dbt** for transformation, modular SQL, testing, documentation
 - **DuckDB** as the local analytical data warehouse
 - **Streamlit** for the interactive data dashboard
 - **Pandas, Plotly & Matplotlib** for data manipulation and visualizations in Python
-
----
 
 ## 📊 About the Data
 
@@ -40,8 +36,6 @@ Key points:
 - Used to visualize cost distribution and prescribing patterns
 
 📁 [Go directly to the PCA dataset](https://opendata.nhsbsa.net/dataset/prescription-cost-analysis-pca-annual-statistics/resource/b8cf68a5-4a93-4940-a5c1-4064bc947ffb)
-
----
 
 ## 🛠️ How to Run Locally
 
