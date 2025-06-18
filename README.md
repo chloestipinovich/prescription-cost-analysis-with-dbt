@@ -37,12 +37,14 @@ Key points:
 
 📁 [Go directly to the PCA dataset](https://opendata.nhsbsa.net/dataset/prescription-cost-analysis-pca-annual-statistics/resource/b8cf68a5-4a93-4940-a5c1-4064bc947ffb)
 
-## 🛠️ How to Run Locally
+## 🛠️ How to Reproduce the Data Warehouse Locally
 
 ### 1. Clone the repo
 
 ```bash
 git clone https://github.com/chloestipinovich/prescription-cost-analysis-with-dbt.git
+```
+```bash
 cd prescription-cost-analysis-with-dbt
 ```
 
@@ -51,7 +53,9 @@ cd prescription-cost-analysis-with-dbt
 ```bash
 # Create a virtual environment
 uv venv venv
+```
 
+```bash
 # Activate the virtual environment
 # On Windows:
 . venv\Scripts\activate
@@ -64,7 +68,8 @@ source venv/bin/activate
 ```bash
 # Install dependencies using pip
 pip install -r requirements.txt
-
+```
+```bash
 # Optional: Use uv for faster installation (if installed)
 uv pip install -r requirements.txt --link-mode=copy
 
@@ -76,7 +81,9 @@ Download the original prescription data from [this link](https://opendata.nhsbsa
 ```bash
 # Create the data directory
 mkdir data
+```
 
+```bash
 # Move your downloaded file to the data folder and rename it
 # (Update path if necessary)
 mv ~/Downloads/pca_icb_snomed_2024_2025.csv ./data/pca_icb_snomed_2024_2025.csv
@@ -84,15 +91,14 @@ mv ~/Downloads/pca_icb_snomed_2024_2025.csv ./data/pca_icb_snomed_2024_2025.csv
 
 ### 4. Run the DBT Models
 
-⚙️ 4.0 Configure your `profiles.yml`
-Before running dbt models, ensure your `profiles.yml` is properly set up with your database connection details.
+#### ⚙️ 4.0 Configure your `profiles.yml`
 
-On most systems, the `profiles.yml` file is located at:
+Before running `dbt` models, ensure your `profiles.yml` is properly set up with your database connection details. On most systems, the `profiles.yml` file is located at:
 
-- Linux/macOS: ~/.dbt/profiles.yml  
-- Windows: C:\Users\<your-username>\.dbt\profiles.yml
+- Linux/macOS: ~/.dbt/`profiles.yml`  
+- Windows: C:\Users\<your-username>\.dbt\`profiles.yml`
 
-The file should define a profile matching this project's `dbt_project.yml`’s profile name. Paste the below into your `profiles.yml` file:
+Paste the below into your `profiles.yml` file to match this project's `dbt_project.yml`’s profile name:
 ```bash
 pca_with_dbt:
   outputs:
@@ -103,18 +109,21 @@ pca_with_dbt:
   target: dev
 ```
 
-4.1 Run the transformation pipeline using `dbt`:
+#### ⚙️ 4.1 Run the transformation pipeline using `dbt`:
 
 ```bash
 # Move the data to the seeds folder
 mv data/pca_icb_snomed_2024_2025.csv seeds/
-
+```
+```bash
 # load the pca_icb_snomed_2024_2025.csv into the database
 dbt seed
-
+```
+```bash
 # Run the staging models to base/staging tables from the raw data
 dbt run --select staging
-
+```
+```bash
 # Then run the mart models to build the transformed tables or views used in analysis
 dbt run --select marts
 ```
