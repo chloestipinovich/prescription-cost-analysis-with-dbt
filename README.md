@@ -1,6 +1,6 @@
-# 💊 Prescription Cost Analysis with dbt & Streamlit
+# Prescription Cost Analysis with dbt & Streamlit
 
-🚀 This project explores prescription cost data in England using **dbt (Data Build Tool)** for data modeling and **Streamlit** for interactive visualizations.
+This project explores prescription cost data in England using **dbt (Data Build Tool)** for data modeling and **Streamlit** for interactive visualizations.
 
 📍 **Live App:** [View on Streamlit](https://prescription-cost-analysis-with-dbt-ae3rmv6segeqr6du2lxwrs.streamlit.app/)
 
