@@ -26,13 +26,13 @@ st.markdown("""
 
 # Define colour mapping for regions
 region_colors = {
-    "MIDLANDS": "#dd4345",
-    "NORTH EAST AND YORKSHIRE": "#377eb8",
-    "SOUTH EAST": "#4daf4a",
-    "NORTH WEST": "#984ea3",
-    "EAST OF ENGLAND": "#ff7f00",
-    "LONDON": "#e78ac3",
-    "SOUTH WEST": "#66c2a5"
+    "MIDLANDS": "#5c70c6",
+    "NORTH EAST AND YORKSHIRE": "#93cb73",
+    "SOUTH EAST": "#f3cd5c",
+    "NORTH WEST": "#e66765",
+    "EAST OF ENGLAND": "#7cc3db",
+    "LONDON": "#9662ac",
+    "SOUTH WEST": "#e57ccc"
 }
 
 # Define how to download the duckdb file from Google Drive
@@ -548,7 +548,7 @@ if st.session_state.page == "BNF":
                 label_opts=opts.LabelOpts(formatter="{b}: {c}%", font_size=14)  # Optional: bigger labels
             )
         )
-        st_pyecharts(pie, height=1000)
+        st_pyecharts(pie, height=800)
         st.write("")
         format_and_display_chapter(nic_by_bnf_chapter, "chapter")
 
