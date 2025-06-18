@@ -79,14 +79,45 @@ mkdir data
 
 # Move your downloaded file to the data folder and rename it
 # (Update path if necessary)
-mv ~/Downloads/pca_icb_snomed_2024_2025.csv ./data/data.csv
+mv ~/Downloads/pca_icb_snomed_2024_2025.csv ./data/pca_icb_snomed_2024_2025.csv
 ```
 
 ### 4. Run the DBT Models
-Run the transformation pipeline using `dbt`:
 
+⚙️ 4.0 Configure your `profiles.yml`
+Before running dbt models, ensure your `profiles.yml` is properly set up with your database connection details.
 
-📘 Make sure your DBT profile is configured correctly in ~/.dbt/profiles.yml.
+On most systems, the `profiles.yml` file is located at:
+
+- Linux/macOS: ~/.dbt/profiles.yml  
+- Windows: C:\Users\<your-username>\.dbt\profiles.yml
+
+The file should define a profile matching this project's `dbt_project.yml`’s profile name. Paste the below into your `profiles.yml` file:
+```bash
+pca_with_dbt:
+  outputs:
+    dev:
+      type: duckdb
+      path: pca_with_dbt.duckdb
+      threads: 1
+  target: dev
+```
+
+4.1 Run the transformation pipeline using `dbt`:
+
+```bash
+# Move the data to the seeds folder
+mv data/pca_icb_snomed_2024_2025.csv seeds/
+
+# load the pca_icb_snomed_2024_2025.csv into the database
+dbt seed
+
+# Run the staging models to base/staging tables from the raw data
+dbt run --select staging
+
+# Then run the mart models to build the transformed tables or views used in analysis
+dbt run --select marts
+```
 
 ### 5. View the Database
 Use a SQL client like `DBeaver` to inspect the transformed data:
