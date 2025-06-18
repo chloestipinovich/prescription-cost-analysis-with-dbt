@@ -6,10 +6,62 @@ import streamlit as st
 from matplotlib import cm
 import os
 import gdown
-
 from pyecharts import options as opts
 from pyecharts.charts import Pie
 from streamlit_echarts import st_pyecharts
+from dotenv import load_dotenv
+
+
+# get the data source variable from the DATA_SOURCE variable
+load_dotenv()
+data_source = os.getenv('DATA_SOURCE', 'remote')  # default to 'remote'
+
+# Define colour mapping for regions
+region_colors = {
+    "MIDLANDS": "#5c70c6",
+    "NORTH EAST AND YORKSHIRE": "#93cb73",
+    "SOUTH EAST": "#f3cd5c",
+    "NORTH WEST": "#e66765",
+    "EAST OF ENGLAND": "#7cc3db",
+    "LONDON": "#9662ac",
+    "SOUTH WEST": "#e57ccc"
+}
+
+# Define Section Descriptions
+section_descriptions = {
+    "Endocrine System": "Hormones, anti‑diabetics, thyroid agents",
+    "Central Nervous System": "Analgesics, antidepressants, antipsychotics, anticonvulsants",
+    "Cardiovascular System": "Antihypertensives, anti‑anginals, anticoagulants",
+    "Respiratory System": "Bronchodilators, corticosteroids, antitussives",
+    "Nutrition and Blood": "Vitamins, minerals, blood products",
+    "Appliances": "Nebulisers, infusion pumps, feeding tubes",
+    "Gastro‑Intestinal System": "Antacids, laxatives, anti‑emetics",
+    "Stoma Appliances": "Colostomy and ileostomy bags and accessories",
+    "Skin": "Topical steroids, emollients, acne treatments",
+    "Obstetrics, Gynaecology & Urinary‑Tract": "Contraceptives, tocolytics, diuretics",
+    "Infections": "Antibiotics, antivirals, antifungals",
+    "Malignant Disease & Immunosuppression": "Chemotherapy, immunosuppressants, targeted therapies",
+    "Dressings": "Gauze, foam, hydrocolloid and other wound dressings",
+    "Eye": "Topical antibiotics, glaucoma treatments, ocular lubricants",
+    "Immunological Products & Vaccines": "Vaccines, immunoglobulins, allergy desensitisation agents",
+    "Musculoskeletal & Joint Diseases": "NSAIDs, disease‑modifying antirheumatic drugs (DMARDs)",
+    "Ear, Nose & Oropharynx": "Ear drops, nasal sprays, throat lozenges",
+    "Incontinence Appliances": "Pads, sheaths, catheters",
+    "Anaesthesia": "Induction agents, volatile anaesthetics, neuromuscular blockers",
+    "Other Drugs & Preparations": "Rarely used or miscellaneous agents",
+    "Preparations Used in Diagnosis": "Contrast media, diagnostic dyes, barium preparations"
+}
+
+# Function used to download duckdb for remote deployment
+def download_duckdb_file():
+    file_id = "1EgaaW_nKExsz0iKeuKh6kd5laFsEcb4_"
+    url = f"https://drive.google.com/uc?id={file_id}"
+    local_filename = "pca_with_dbt.duckdb"
+    
+    if not os.path.exists(local_filename):
+        gdown.download(url, local_filename, quiet=False)
+    
+    return local_filename
 
 # Set up the page
 st.set_page_config(page_title="NIC Dashboard", layout="wide")
@@ -24,31 +76,13 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Define colour mapping for regions
-region_colors = {
-    "MIDLANDS": "#5c70c6",
-    "NORTH EAST AND YORKSHIRE": "#93cb73",
-    "SOUTH EAST": "#f3cd5c",
-    "NORTH WEST": "#e66765",
-    "EAST OF ENGLAND": "#7cc3db",
-    "LONDON": "#9662ac",
-    "SOUTH WEST": "#e57ccc"
-}
-
-# Define how to download the duckdb file from Google Drive
-@st.cache_data
-def download_duckdb_file():
-    file_id = "1EgaaW_nKExsz0iKeuKh6kd5laFsEcb4_"
-    url = f"https://drive.google.com/uc?id={file_id}"
-    local_filename = "pca_with_dbt.duckdb"
-    
-    if not os.path.exists(local_filename):
-        gdown.download(url, local_filename, quiet=False)
-    
-    return local_filename
-
-# Download the DuckDB from Google Drive
-db_file = download_duckdb_file()
+# Connect to duckdb
+if data_source == 'local':
+    db_file = "pca_with_dbt.duckdb"
+elif data_source == 'remote':
+    db_file = download_duckdb_file()
+else:
+    raise ValueError("Invalid DATA_SOURCE value. Use 'local' or 'remote'.")
 
 # Cache and load data
 @st.cache_data
@@ -244,44 +278,60 @@ elif st.session_state.page == "Regions":
         df["Percent of Total NIC"] = df["Percent of Total NIC"].round(2).astype(str) + "%"
 
         # Reset index so it won't be displayed
-        df_reset = df.reset_index(drop=True)
+        df = df.reset_index(drop=True)
 
-        styled_df = (
-            df_reset.style
-            .set_table_styles([
-                {'selector': 'th', 'props': [('font-weight', 'bold')]},
-                {'selector': 'td:nth-child(4)', 'props': [('text-align', 'center')]},
-                {'selector': 'th:nth-child(4)', 'props': [('text-align', 'center')]},
-            ])
-        )
+        # Wrap the table in a scrollable container div
+        table_html = f"""
+        <div class="scrollable-table">
+            {df.to_html(index=False, escape=False, justify="center", classes="nic-table")}
+        </div>
+        """
 
-        st.markdown(styled_df.to_html(), unsafe_allow_html=True)
+        # Number of columns, to target last two
+        n_cols = len(df.columns)
 
+        # Inject custom CSS
+        st.markdown(f"""
+            <style>
+            .nic-table {{
+                width: 100% !important;
+                margin-left: auto;
+                margin-right: auto;
+                border-collapse: collapse;
+            }}
+            .nic-table th, .nic-table td {{
+                padding: 8px 12px;
+            }}
+            .nic-table th {{
+                text-align: center;
+                background-color: #f0f2f6;
+                font-weight: bold;
+            }}
+            /* Center last two columns */
+            .nic-table td:nth-child({n_cols - 1}), .nic-table td:nth-child({n_cols}) {{
+                text-align: center;
+            }}
+            .nic-table th:nth-child({n_cols - 1}), .nic-table th:nth-child({n_cols}) {{
+                text-align: center;
+            }}
+            .scrollable-table {{
+                max-height: 500px;
+                overflow-y: auto;
+                overflow-x: hidden;
+                border: 1px solid #ccc; 
+            }}
 
-# Define Section Descriptions
-section_descriptions = {
-    "Endocrine System": "Hormones, anti‑diabetics, thyroid agents",
-    "Central Nervous System": "Analgesics, antidepressants, antipsychotics, anticonvulsants",
-    "Cardiovascular System": "Antihypertensives, anti‑anginals, anticoagulants",
-    "Respiratory System": "Bronchodilators, corticosteroids, antitussives",
-    "Nutrition and Blood": "Vitamins, minerals, blood products",
-    "Appliances": "Nebulisers, infusion pumps, feeding tubes",
-    "Gastro‑Intestinal System": "Antacids, laxatives, anti‑emetics",
-    "Stoma Appliances": "Colostomy and ileostomy bags and accessories",
-    "Skin": "Topical steroids, emollients, acne treatments",
-    "Obstetrics, Gynaecology & Urinary‑Tract": "Contraceptives, tocolytics, diuretics",
-    "Infections": "Antibiotics, antivirals, antifungals",
-    "Malignant Disease & Immunosuppression": "Chemotherapy, immunosuppressants, targeted therapies",
-    "Dressings": "Gauze, foam, hydrocolloid and other wound dressings",
-    "Eye": "Topical antibiotics, glaucoma treatments, ocular lubricants",
-    "Immunological Products & Vaccines": "Vaccines, immunoglobulins, allergy desensitisation agents",
-    "Musculoskeletal & Joint Diseases": "NSAIDs, disease‑modifying antirheumatic drugs (DMARDs)",
-    "Ear, Nose & Oropharynx": "Ear drops, nasal sprays, throat lozenges",
-    "Incontinence Appliances": "Pads, sheaths, catheters",
-    "Anaesthesia": "Induction agents, volatile anaesthetics, neuromuscular blockers",
-    "Other Drugs & Preparations": "Rarely used or miscellaneous agents",
-    "Preparations Used in Diagnosis": "Contrast media, diagnostic dyes, barium preparations"
-}
+            /* Make table headers sticky */
+            .nic-table thead th {{
+                position: sticky;
+                top: 0;
+                background-color: #f0f2f6; /* Same as your header background */
+                z-index: 1; /* Ensure headers stay on top */
+            }}
+            </style>
+        """, unsafe_allow_html=True)
+
+        st.markdown(table_html, unsafe_allow_html=True)
 
 # BNF PAGE -------------------------------------------------
 if st.session_state.page == "BNF":
