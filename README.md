@@ -86,7 +86,7 @@ mv ~/Downloads/pca_icb_snomed_2024_2025.csv ./data/pca_icb_snomed_2024_2025.csv
 
 ### ⚙️ 4. Run the DBT Models
 
-#### 📝 4.0 Configure your `profiles.yml`
+#### 4.1 Configure your `profiles.yml`
 
 Before running `dbt` models, ensure your `profiles.yml` is properly set up with your database connection details. On most systems, the `profiles.yml` file is located at:
 
@@ -104,7 +104,7 @@ pca_with_dbt:
   target: dev
 ```
 
-#### 🔧 4.1 Run the transformation pipeline using `dbt`:
+#### 4.2 Run the transformation pipeline using `dbt`:
 
 ```bash
 # Move the data to the seeds folder
@@ -123,7 +123,7 @@ dbt run --select staging
 dbt run --select marts
 ```
 
-### 🗄️ 5. View the Database
+### 🔍 5. View the Database
 Use a SQL client like `DBeaver` to inspect the transformed data:
 
 - Connect to your local database (e.g., SQLite, Postgres, etc.)
