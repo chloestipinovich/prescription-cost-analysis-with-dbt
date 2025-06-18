@@ -15,7 +15,7 @@ The primary goal of this project was to gain **hands-on experience with dbt**. T
 - Generating documentation and tests
 - Deploying a polished frontend using Streamlit
 
-This project showcases my ability to work across the modern data stack — from modeling raw data to delivering actionable insights.
+This project showcases my ability to work across the modern data stack.
 
 ---
 
@@ -38,5 +38,5 @@ Key points:
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/your-username/your-repo-name.git
+git clone https://github.com/chloestipinovich/prescription-cost-analysis-with-dbt.git
 cd your-repo-name
