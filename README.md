@@ -39,44 +39,39 @@ Key points:
 
 ## 🛠️ How to Reproduce the Data Warehouse Locally
 
-### 1. Clone the repo
+### 📂 1. Clone the repo
 
 ```bash
 git clone https://github.com/chloestipinovich/prescription-cost-analysis-with-dbt.git
-```
-```bash
 cd prescription-cost-analysis-with-dbt
 ```
 
-### 2.1 Set Up the Virtual Environment (Optional)
+### 🐍 2.1 Set Up the Virtual Environment (Optional)
 
+Create a virtual environment
 ```bash
-# Create a virtual environment
 uv venv venv
 ```
-
+Activate the virtual environment
 ```bash
-# Activate the virtual environment
 # On Windows:
 . venv\Scripts\activate
 # On macOS/Linux:
 source venv/bin/activate
 ```
 
-### 2.2 Install Dependencies
+### 📦 2.2 Install Dependencies
 
+Install dependencies using pip
 ```bash
-# Install dependencies using pip
+# Without virtual environment
 pip install -r requirements.txt
-```
-```bash
-# Optional: Use uv for faster installation (if installed)
+# With uv as your virtual environemnt manager
 uv pip install -r requirements.txt --link-mode=copy
-
 ```
 
-### 3. Download the Original Data
-Download the original prescription data from [this link](https://opendata.nhsbsa.net/dataset/prescription-cost-analysis-pca-annual-statistics/resource/b8cf68a5-4a93-4940-a5c1-4064bc947ffb) and place it in a new `data` directory:
+### ⬇️ 3. Download the Original Data
+Download the original prescription cost data from [this link](https://opendata.nhsbsa.net/dataset/prescription-cost-analysis-pca-annual-statistics/resource/b8cf68a5-4a93-4940-a5c1-4064bc947ffb) and place it in a new `data` directory:
 
 ```bash
 # Create the data directory
@@ -89,9 +84,9 @@ mkdir data
 mv ~/Downloads/pca_icb_snomed_2024_2025.csv ./data/pca_icb_snomed_2024_2025.csv
 ```
 
-### 4. Run the DBT Models
+### ⚙️ 4. Run the DBT Models
 
-#### ⚙️ 4.0 Configure your `profiles.yml`
+#### 📝 4.0 Configure your `profiles.yml`
 
 Before running `dbt` models, ensure your `profiles.yml` is properly set up with your database connection details. On most systems, the `profiles.yml` file is located at:
 
@@ -109,7 +104,7 @@ pca_with_dbt:
   target: dev
 ```
 
-#### ⚙️ 4.1 Run the transformation pipeline using `dbt`:
+#### 🔧 4.1 Run the transformation pipeline using `dbt`:
 
 ```bash
 # Move the data to the seeds folder
@@ -128,7 +123,7 @@ dbt run --select staging
 dbt run --select marts
 ```
 
-### 5. View the Database
+### 🗄️ 5. View the Database
 Use a SQL client like `DBeaver` to inspect the transformed data:
 
 - Connect to your local database (e.g., SQLite, Postgres, etc.)
